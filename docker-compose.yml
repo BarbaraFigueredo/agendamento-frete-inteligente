@@ -1,0 +1,90 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────
+# Volumes persistentes
+# ─────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+  redis_data:
+
+# ─────────────────────────────────────────────────────────────
+# Rede interna
+# ─────────────────────────────────────────────────────────────
+networks:
+  freight_net:
+    driver: bridge
+
+# ─────────────────────────────────────────────────────────────
+# Serviços
+# ─────────────────────────────────────────────────────────────
+services:
+
+  # ── Banco de dados ──────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: freight_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-freight_db}
+      POSTGRES_USER:     ${POSTGRES_USER:-freight_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-freight_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-freight_user} -d ${POSTGRES_DB:-freight_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - freight_net
+
+  # ── Cache / Broker (Celery futuro) ──────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: freight_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - freight_net
+
+  # ── Aplicação Django ────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: freight_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-freight_user}:${POSTGRES_PASSWORD:-freight_pass}@db:5432/${POSTGRES_DB:-freight_db}
+      REDIS_URL:    redis://redis:6379/0
+      DJANGO_SETTINGS_MODULE: config.settings.development
+    volumes:
+      # Hot-reload em desenvolvimento: monta o código local
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - freight_net
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate --noinput &&
+             python manage.py runserver 0.0.0.0:8000"

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreightFlow — Sistema de Agendamento de Frete</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="mainNav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="nav-logo" viewBox="0 0 32 32" fill="none">
+                    <rect x="2" y="8" width="28" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M8 14 L14 20 L24 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="nav-title">FreightFlow</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Início</a></li>
+                <li><a href="#schedule" class="nav-link">Agendar</a></li>
+                <li><a href="#tracking" class="nav-link">Rastrear</a></li>
+                <li><a href="#about" class="nav-link">Sobre</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">Sistema Inteligente de Logística</div>
+                <h1 class="hero-title">
+                    Agendamento de frete
+                    <span class="hero-highlight">simplificado</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Conectamos você aos melhores transportadores com tecnologia de ponta.
+                    Agende, rastreie e gerencie suas cargas em tempo real.
+                </p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary" onclick="scrollToSection('schedule')">
+                        <span>Agendar Agora</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7 10L13 10M13 10L10 7M13 10L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('tracking')">
+                        <span>Rastrear Pedido</span>
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number" data-count="1247">0</div>
+                        <div class="stat-label">Fretes realizados</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="98">0</div>
+                        <div class="stat-label">% Satisfação</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="42">0</div>
+                        <div class="stat-label">Cidades atendidas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Role para explorar</span>
+            <svg width="20" height="20" viewBox="0 0 20 20">
+                <path d="M10 4L10 16M10 16L6 12M10 16L14 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section class="section section-schedule" id="schedule">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Comece agora</div>
+                <h2 class="section-title">Agende seu frete</h2>
+                <p class="section-subtitle">Preencha os dados abaixo para solicitar um orçamento personalizado</p>
+            </div>
+
+            <form class="freight-form" id="freightForm">
+                <!-- Step Indicator -->
+                <div class="form-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Solicitante</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Endereços</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Itens</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Confirmação</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Requester Info -->
+                <div class="form-step active" data-step="1">
+                    <h3 class="form-step-title">Informações do Solicitante</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="requester_name" class="form-label">Nome Completo</label>
+                            <input type="text" id="requester_name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="requester_cpf" class="form-label">CPF</label>
+                            <input type="text" id="requester_cpf" class="form-input" placeholder="000.000.000-00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="requester_phone" class="form-label">Telefone</label>
+                            <input type="tel" id="requester_phone" class="form-input" placeholder="(00) 00000-0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="requester_email" class="form-label">E-mail</label>
+                            <input type="email" id="requester_email" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">Próximo</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Addresses -->
+                <div class="form-step" data-step="2">
+                    <h3 class="form-step-title">Endereços de Coleta e Entrega</h3>
+                    
+                    <div class="address-section">
+                        <h4 class="address-title">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10 2L12 8L18 10L12 12L10 18L8 12L2 10L8 8L10 2Z" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                            Endereço de Coleta
+                        </h4>
+                        <div class="form-grid">
+                            <div class="form-group span-2">
+                                <label for="pickup_street" class="form-label">Logradouro</label>
+                                <input type="text" id="pickup_street" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pickup_number" class="form-label">Número</label>
+                                <input type="text" id="pickup_number" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pickup_complement" class="form-label">Complemento</label>
+                                <input type="text" id="pickup_complement" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="pickup_neighborhood" class="form-label">Bairro</label>
+                                <input type="text" id="pickup_neighborhood" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pickup_city" class="form-label">Cidade</label>
+                                <input type="text" id="pickup_city" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pickup_state" class="form-label">UF</label>
+                                <input type="text" id="pickup_state" class="form-input" maxlength="2" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pickup_zipcode" class="form-label">CEP</label>
+                                <input type="text" id="pickup_zipcode" class="form-input" placeholder="00000-000" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="address-section">
+                        <h4 class="address-title">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10 10L10 3M10 10L6 6M10 10L14 6M4 17L16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            Endereço de Entrega
+                        </h4>
+                        <div class="form-grid">
+                            <div class="form-group span-2">
+                                <label for="delivery_street" class="form-label">Logradouro</label>
+                                <input type="text" id="delivery_street" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery_number" class="form-label">Número</label>
+                                <input type="text" id="delivery_number" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery_complement" class="form-label">Complemento</label>
+                                <input type="text" id="delivery_complement" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery_neighborhood" class="form-label">Bairro</label>
+                                <input type="text" id="delivery_neighborhood" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery_city" class="form-label">Cidade</label>
+                                <input type="text" id="delivery_city" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery_state" class="form-label">UF</label>
+                                <input type="text" id="delivery_state" class="form-input" maxlength="2" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery_zipcode" class="form-label">CEP</label>
+                                <input type="text" id="delivery_zipcode" class="form-input" placeholder="00000-000" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="scheduled_date" class="form-label">Data de Coleta</label>
+                            <input type="date" id="scheduled_date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modality" class="form-label">Modalidade</label>
+                            <select id="modality" class="form-input" required>
+                                <option value="">Selecione...</option>
+                                <option value="FTL">Caminhão Exclusivo (FTL)</option>
+                                <option value="LTL">Carga Fracionada (LTL)</option>
+                                <option value="VAN">Van</option>
+                                <option value="MOTO">Moto</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">Voltar</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">Próximo</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Items -->
+                <div class="form-step" data-step="3">
+                    <h3 class="form-step-title">Itens a Transportar</h3>
+                    
+                    <div id="itemsList">
+                        <div class="item-card" data-item="0">
+                            <div class="item-header">
+                                <span class="item-number">Item #1</span>
+                                <button type="button" class="btn-icon" onclick="removeItem(0)" style="display:none;">
+                                    <svg width="20" height="20" viewBox="0 0 20 20">
+                                        <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group span-2">
+                                    <label class="form-label">Descrição</label>
+                                    <input type="text" class="form-input item-description" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Quantidade</label>
+                                    <input type="number" class="form-input item-quantity" min="1" value="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Peso (kg)</label>
+                                    <input type="number" class="form-input item-weight" step="0.01" min="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Comprimento (cm)</label>
+                                    <input type="number" class="form-input item-length" step="0.1" min="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Largura (cm)</label>
+                                    <input type="number" class="form-input item-width" step="0.1" min="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Altura (cm)</label>
+                                    <input type="number" class="form-input item-height" step="0.1" min="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Valor Declarado (R$)</label>
+                                    <input type="number" class="form-input item-value" step="0.01" min="0" required>
+                                </div>
+                                <div class="form-group span-2">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" class="item-fragile">
+                                        <span>Item frágil</span>
+                                    </label>
+                                </div>
+                                <div class="form-group span-3">
+                                    <label class="form-label">Observações</label>
+                                    <textarea class="form-input item-notes" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-outline" onclick="addItem()">
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path d="M10 5L10 15M5 10L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Adicionar Item
+                    </button>
+
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <label for="notes" class="form-label">Observações Gerais</label>
+                        <textarea id="notes" class="form-input" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">Voltar</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">Próximo</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation -->
+                <div class="form-step" data-step="4">
+                    <h3 class="form-step-title">Confirmação do Agendamento</h3>
+                    
+                    <div class="confirmation-card">
+                        <div class="confirmation-section">
+                            <h4 class="confirmation-title">Solicitante</h4>
+                            <div id="confirmRequester"></div>
+                        </div>
+                        <div class="confirmation-section">
+                            <h4 class="confirmation-title">Coleta e Entrega</h4>
+                            <div id="confirmAddresses"></div>
+                        </div>
+                        <div class="confirmation-section">
+                            <h4 class="confirmation-title">Itens</h4>
+                            <div id="confirmItems"></div>
+                        </div>
+                        <div class="confirmation-section">
+                            <h4 class="confirmation-title">Resumo</h4>
+                            <div id="confirmSummary"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">Voltar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span>Confirmar Agendamento</span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M5 10L9 14L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Tracking Section -->
+    <section class="section section-tracking" id="tracking">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Rastreamento</div>
+                <h2 class="section-title">Acompanhe seu frete</h2>
+                <p class="section-subtitle">Digite o ID do agendamento para rastrear</p>
+            </div>
+
+            <div class="tracking-search">
+                <input type="text" class="tracking-input" id="trackingId" placeholder="Ex: ab5b05d2-7980-4a66-bc72-751b9c3e33e7">
+                <button class="btn btn-primary" onclick="trackFreight()">
+                    <span>Rastrear</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2"/>
+                        <path d="M14 14L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="tracking-result" id="trackingResult" style="display:none;">
+                <div class="tracking-card">
+                    <div class="tracking-header">
+                        <div>
+                            <div class="tracking-id">ID: <span id="resultId"></span></div>
+                            <div class="tracking-status">Status: <span id="resultStatus" class="status-badge"></span></div>
+                        </div>
+                        <div class="tracking-date">
+                            <div class="tracking-label">Data de Coleta</div>
+                            <div id="resultDate"></div>
+                        </div>
+                    </div>
+
+                    <div class="tracking-timeline">
+                        <div class="timeline-item" data-status="draft">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Rascunho</div>
+                                <div class="timeline-desc">Agendamento criado</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-status="confirmed">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Confirmado</div>
+                                <div class="timeline-desc">Aguardando designação</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-status="assigned">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Motorista Designado</div>
+                                <div class="timeline-desc">Pronto para coleta</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-status="in_transit">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Em Trânsito</div>
+                                <div class="timeline-desc">Carga a caminho</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-status="delivered">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Entregue</div>
+                                <div class="timeline-desc">Frete concluído</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tracking-info">
+                        <div class="info-row">
+                            <span class="info-label">Solicitante:</span>
+                            <span id="resultRequester"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Origem:</span>
+                            <span id="resultOrigin"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Destino:</span>
+                            <span id="resultDestination"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Itens:</span>
+                            <span id="resultItems"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section section-about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <div class="section-tag">Sobre nós</div>
+                    <h2 class="section-title">Tecnologia e segurança no transporte de cargas</h2>
+                    <p class="about-text">
+                        O FreightFlow é uma plataforma moderna que conecta solicitantes a transportadores
+                        qualificados, proporcionando transparência, rastreamento em tempo real e 
+                        atendimento personalizado.
+                    </p>
+                    <p class="about-text">
+                        Nossa arquitetura foi desenvolvida seguindo princípios de Clean Architecture,
+                        garantindo escalabilidade, manutenibilidade e alta performance para operações
+                        logísticas complexas.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <div>
+                                <h4 class="feature-title">100% Seguro</h4>
+                                <p class="feature-desc">Transportadores verificados e seguros</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <div>
+                                <h4 class="feature-title">Rastreamento 24/7</h4>
+                                <p class="feature-desc">Monitore sua carga em tempo real</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none">
+                                <path d="M13 10V3L4 14H11V21L20 10H13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <div>
+                                <h4 class="feature-title">Rápido & Eficiente</h4>
+                                <p class="feature-desc">Otimização de rotas e prazos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <div class="visual-card">
+                        <div class="visual-stat">
+                            <div class="visual-number">1200+</div>
+                            <div class="visual-label">Fretes Realizados</div>
+                        </div>
+                    </div>
+                    <div class="visual-card">
+                        <div class="visual-stat">
+                            <div class="visual-number">98%</div>
+                            <div class="visual-label">Satisfação</div>
+                        </div>
+                    </div>
+                    <div class="visual-card">
+                        <div class="visual-stat">
+                            <div class="visual-number">24h</div>
+                            <div class="visual-label">Suporte</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <svg class="footer-logo" viewBox="0 0 32 32" fill="none">
+                        <rect x="2" y="8" width="28" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 14 L14 20 L24 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="footer-title">FreightFlow</span>
+                </div>
+                <p class="footer-text">
+                    Sistema de agendamento de frete moderno e eficiente.
+                    Desenvolvido com Clean Architecture e tecnologias de ponta.
+                </p>
+                <div class="footer-tech">
+                    <span class="tech-badge">Django</span>
+                    <span class="tech-badge">PostgreSQL</span>
+                    <span class="tech-badge">Redis</span>
+                    <span class="tech-badge">Docker</span>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 FreightFlow. Todos os direitos reservados.</p>
+                <p class="footer-note">Projeto demonstrativo — Clean Architecture</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-success">
+                <svg class="modal-icon" viewBox="0 0 64 64" fill="none">
+                    <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="3"/>
+                    <path d="M20 32L28 40L44 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h3 class="modal-title">Agendamento Realizado!</h3>
+                <p class="modal-message">Seu frete foi agendado com sucesso.</p>
+                <p class="modal-id">ID: <strong id="modalFreightId"></strong></p>
+                <button class="btn btn-primary" onclick="closeModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
