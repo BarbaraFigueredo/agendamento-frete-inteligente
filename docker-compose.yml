@@ -1,25 +1,17 @@
 version: "3.9"
 
-# ─────────────────────────────────────────────────────────────
-# Volumes persistentes
-# ─────────────────────────────────────────────────────────────
 volumes:
   postgres_data:
   redis_data:
+  static_files:
 
-# ─────────────────────────────────────────────────────────────
-# Rede interna
-# ─────────────────────────────────────────────────────────────
 networks:
   freight_net:
     driver: bridge
 
-# ─────────────────────────────────────────────────────────────
-# Serviços
-# ─────────────────────────────────────────────────────────────
 services:
 
-  # ── Banco de dados ──────────────────────────────────────────
+  # ── Banco de dados ──────────────────────────────────────────────────────────
   db:
     image: postgres:16-alpine
     container_name: freight_db
@@ -40,7 +32,7 @@ services:
     networks:
       - freight_net
 
-  # ── Cache / Broker (Celery futuro) ──────────────────────────
+  # ── Cache / Broker ──────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: freight_redis
@@ -58,25 +50,21 @@ services:
     networks:
       - freight_net
 
-  # ── Aplicação Django ────────────────────────────────────────
-  app:
+  # ── Backend Django ──────────────────────────────────────────────────────────
+  backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
-      target: runtime
-    container_name: freight_app
+    container_name: freight_backend
     restart: unless-stopped
-    env_file:
-      - .env
+    env_file: .env
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER:-freight_user}:${POSTGRES_PASSWORD:-freight_pass}@db:5432/${POSTGRES_DB:-freight_db}
-      REDIS_URL:    redis://redis:6379/0
-      DJANGO_SETTINGS_MODULE: config.settings.development
+      DJANGO_SETTINGS_MODULE: freight_flow.settings.development
     volumes:
-      # Hot-reload em desenvolvimento: monta o código local
-      - .:/app
+      - ./backend:/app
+      - static_files:/app/staticfiles
     ports:
-      - "8000:8000"
+      - "8005:8005"
     depends_on:
       db:
         condition: service_healthy
@@ -85,6 +73,23 @@ services:
     networks:
       - freight_net
     command: >
-      sh -c "python manage.py wait_for_db &&
-             python manage.py migrate --noinput &&
-             python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8005"
+
+  # ── Frontend React ──────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: freight_frontend
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5175:5175"
+    depends_on:
+      - backend
+    networks:
+      - freight_net
