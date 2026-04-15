@@ -142,7 +142,7 @@ SPECTACULAR_SETTINGS = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL", default="redis://localhost:6379/1"),
+        "LOCATION": env("REDIS_URL", default="redis://localhost:6380/1"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
