@@ -5,13 +5,13 @@ django-environ==0.11.2
 django-cors-headers==4.3.1
 djangorestframework-simplejwt==5.3.1
 
-# ── Banco de dados ────────────────────────────────
-psycopg2-binary==2.9.9
+# ── Banco de dados ─────────────────────────────────
+# psycopg2-binary: apenas quando DATABASE_URL apontar para PostgreSQL
+# Habilite adicionando: psycopg2-binary==2.9.9
 dj-database-url==2.1.0
 
-# ── Cache ─────────────────────────────────────────
-redis==5.0.4
-django-redis==5.4.0
+# ── Static files ──────────────────────────────────
+whitenoise==6.7.0
 
 # ── Documentação da API ───────────────────────────
 drf-spectacular==0.27.2
